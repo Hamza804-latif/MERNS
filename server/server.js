@@ -1,18 +1,14 @@
 const express = require("express");
+const cors = require("cors");
 
 const app = express();
 
-app.use((req, resp, next) => {
-  console.log("middleware is called");
-  next();
-});
+app.use(cors());
+app.use(express.json({ limit: "30mb" }));
 
-app.get("/data", (req, resp) => {
-  resp.json("route is working");
-});
-
-app.get("/data2", (req, resp) => {
-  resp.json("route 2 is working");
+app.post("/register", (req, resp) => {
+  console.log(req.body);
+  resp.json("register route works");
 });
 
 app.listen(5000, () => {

@@ -1,0 +1,32 @@
+.register {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form {
+    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.2);
+    padding: 8px;
+}
+
+.register-form input {
+    padding: 8px 3px;
+    width: 350px;
+}
+
+.register-form button {
+    padding: 12px 14px;
+    background-color: blueviolet;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    align-self: center;
+    border-radius: 5px;
+}
