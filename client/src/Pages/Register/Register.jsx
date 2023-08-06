@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./register.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Register = () => {
@@ -8,6 +8,8 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const ConvertImageToString = (obj) => {
     if (obj.target.files.length > 0) {
@@ -21,16 +23,28 @@ const Register = () => {
 
   const Signup = async () => {
     if (image && name && email && password) {
-      let data = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ image, name, email, password }),
-      };
-      let result = await fetch("http://localhost:5000/register", data);
-      let josnData = await result.json();
-      console.log(josnData);
+      try {
+        setIsLoading(true);
+        let data = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ image, name, email, password }),
+        };
+        let result = await fetch("http://localhost:5000/register", data);
+        let jsonData = await result.json();
+        if (jsonData.status === 200) {
+          setIsLoading(false);
+          toast.success(jsonData.msg);
+          navigate("/login");
+        } else {
+          toast.error(jsonData.msg);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
     } else {
       toast.error("Please fill all fields");
     }
@@ -38,7 +52,7 @@ const Register = () => {
   return (
     <div className="register">
       <div className="register-form">
-        <h1>Signup</h1>
+        <h1>{isLoading ? "Loading..." : "Signup"}</h1>
         <input type="file" onChange={(e) => ConvertImageToString(e)} />
         <input
           type="text"
