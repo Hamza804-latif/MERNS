@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Login = () => {
+  const [token, setToken] = useState(
+    JSON.parse(localStorage.getItem("userToken"))
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
@@ -23,7 +26,8 @@ const Login = () => {
         setLoading(false);
         if (jsonData.status === 200) {
           toast.success(jsonData.msg);
-          navigate("/home");
+          localStorage.setItem("userToken", JSON.stringify(jsonData.token));
+          navigate("/");
         } else {
           toast.error(jsonData.msg);
         }
@@ -35,6 +39,15 @@ const Login = () => {
       toast.error("Please fill all fields");
     }
   }
+
+  useEffect(() => {
+    if (token) {
+      navigate("/home");
+    } else {
+      return;
+    }
+  }, [token]);
+
   return (
     <div className="register">
       <div className="register-form">

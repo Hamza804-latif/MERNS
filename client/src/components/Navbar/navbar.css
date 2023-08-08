@@ -1,0 +1,29 @@
+.navbar-main {
+    padding: 10px;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.2);
+
+}
+
+.navbarContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 1000px;
+    margin: auto;
+}
+
+.links {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.links a {
+    text-decoration: none;
+    color: black;
+    font-size: 18px;
+}
+
+.links button {
+    padding: 6px 12px;
+}

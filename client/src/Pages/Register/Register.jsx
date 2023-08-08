@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./register.css";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Register = () => {
+  const [token, setToken] = useState(
+    JSON.parse(localStorage.getItem("userToken"))
+  );
   const [image, setImage] = useState(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -20,6 +23,13 @@ const Register = () => {
       };
     }
   };
+  useEffect(() => {
+    if (token) {
+      navigate("/home");
+    } else {
+      return;
+    }
+  }, [token]);
 
   const Signup = async () => {
     if (image && name && email && password) {

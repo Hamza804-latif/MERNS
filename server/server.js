@@ -1,8 +1,11 @@
+const env = require("dotenv");
+env.config();
 const express = require("express");
 const cors = require("cors");
 const DatabaseConnection = require("./database/index.js");
 const { registerModel } = require("./database/models.js");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
@@ -42,11 +45,23 @@ app.post("/login", async (req, resp) => {
         password,
         emailCheck.password
       );
+
       if (checkHashedPassword) {
-        return resp.json({
-          status: 200,
-          msg: "Login Successfully",
-        });
+        jwt.sign(
+          { id: emailCheck._id, name: emailCheck.name },
+          process.env.JWT_TOKEN,
+          { expiresIn: "1m" },
+          (err, token) => {
+            if (err) {
+              return resp.json({ status: 500, msg: "Internal server Error" });
+            }
+            return resp.json({
+              status: 200,
+              msg: "Login Successfully",
+              token,
+            });
+          }
+        );
       } else {
         return resp.json({
           status: 401,
@@ -61,6 +76,6 @@ app.post("/login", async (req, resp) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("server is running on port 5000");
+app.listen(process.env.PORT, () => {
+  console.log(`server is running on port ${process.env.PORT}`);
 });
