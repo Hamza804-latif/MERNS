@@ -1,0 +1,19 @@
+.addcontainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+label {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+}
+
+label img {
+    height: 80px;
+    width: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}

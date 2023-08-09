@@ -3,7 +3,7 @@ env.config();
 const express = require("express");
 const cors = require("cors");
 const DatabaseConnection = require("./database/index.js");
-const { registerModel } = require("./database/models.js");
+const { registerModel, ProductModel } = require("./database/models.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -71,6 +71,25 @@ app.post("/login", async (req, resp) => {
     } else {
       return resp.json({ status: 401, msg: "email or password is incorrect" });
     }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/addproduct", async (req, resp) => {
+  let { image, price, name, stock } = req.body;
+  try {
+    await ProductModel.create({ image, price, name, stock });
+    resp.json({ status: 200, msg: "Product added Successfully" });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/allproducts", async (req, resp) => {
+  try {
+    let allproducts = await ProductModel.find({});
+    resp.json({ status: 200, data: allproducts });
   } catch (error) {
     console.log(error);
   }

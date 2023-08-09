@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Home from "./Pages/Dashboard/Home/Home";
 import PrivateRoute from "./Pages/Dashboard/PrivateRoute";
 import Add from "./Pages/Dashboard/AddProduct/Add";
+import NotFound from "./components/NotFound";
 
 function App() {
   return (
@@ -17,9 +18,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<PrivateRoute />}>
-            <Route path="/home" element={<Home />} />
+            <Route index element={<Home />} />
             <Route path="/addproduct" element={<Add />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
     </>

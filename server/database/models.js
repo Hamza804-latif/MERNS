@@ -7,4 +7,12 @@ let RegisterScehma = new mongoose.Schema({
   password: String,
 });
 
+let ProductSchema = new mongoose.Schema({
+  image: String,
+  name: String,
+  price: String,
+  stock: String,
+});
+
 exports.registerModel = mongoose.model("register", RegisterScehma);
+exports.ProductModel = mongoose.model("products", ProductSchema);
