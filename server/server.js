@@ -95,6 +95,30 @@ app.get("/allproducts", async (req, resp) => {
   }
 });
 
+app.delete("/delete/:id", async (req, resp) => {
+  try {
+    let deletedData = await ProductModel.deleteOne({ _id: req.params.id });
+    if (deletedData?.deletedCount > 0) {
+      return resp.json({ status: 200, msg: "Product Deleted successfully" });
+    } else {
+      return resp.json({ status: 404, msg: "Product Not Found" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/search", async (req, resp) => {
+  try {
+    let searchResult = await ProductModel.find({
+      name: { $regex: req.query.query, $options: "i" },
+    });
+    resp.json({ status: 200, data: searchResult });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.listen(process.env.PORT, () => {
   console.log(`server is running on port ${process.env.PORT}`);
 });
