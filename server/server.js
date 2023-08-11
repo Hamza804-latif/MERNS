@@ -95,6 +95,15 @@ app.get("/allproducts", async (req, resp) => {
   }
 });
 
+app.get("/product/:id", async (req, resp) => {
+  try {
+    let allproducts = await ProductModel.findOne({ _id: req.params.id });
+    resp.json({ status: 200, data: allproducts });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 app.delete("/delete/:id", async (req, resp) => {
   try {
     let deletedData = await ProductModel.deleteOne({ _id: req.params.id });
@@ -114,6 +123,23 @@ app.get("/search", async (req, resp) => {
       name: { $regex: req.query.query, $options: "i" },
     });
     resp.json({ status: 200, data: searchResult });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.put("/editproduct/:id", async (req, resp) => {
+  let { image, name, price, stock } = req.body;
+  try {
+    let updateData = await ProductModel.updateOne(
+      { _id: req.params.id },
+      { $set: { image, name, price, stock } }
+    );
+    if (updateData?.modifiedCount > 0) {
+      return resp.json({ status: 200, msg: "Product updated Successfully" });
+    } else {
+      return resp.json({ status: 404, msg: "Product Not Found" });
+    }
   } catch (error) {
     console.log(error);
   }

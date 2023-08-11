@@ -27,7 +27,9 @@ const Navbar = () => {
           >
             Add Product
           </NavLink>
-          <button onClick={Logout}>Logout</button>
+          <button onClick={Logout} className="logoutBtn">
+            Logout
+          </button>
         </div>
       </div>
     </div>

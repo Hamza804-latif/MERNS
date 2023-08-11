@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ProductAvatar from "../../../assets/productAvatar.jpeg";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./add.css";
 
 const Add = () => {
@@ -10,6 +10,7 @@ const Add = () => {
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const ConvertImageToString = (obj) => {
     if (obj.target.files.length > 0) {
@@ -21,10 +22,32 @@ const Add = () => {
     }
   };
 
+  useEffect(() => {
+    if (id) {
+      getAll();
+    }
+  }, []);
+
+  async function getAll() {
+    try {
+      let data = await fetch(`http://localhost:5000/product/${id}`);
+      let json = await data.json();
+      if (json.status === 200) {
+        setImage(json.data.image);
+        setName(json.data.name);
+        setPrice(json.data.price);
+        setStock(json.data.stock);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function Add() {
     if (image && price && name && stock) {
-      let res = await fetch("http://localhost:5000/addproduct", {
-        method: "POST",
+      let route = id ? `editproduct/${id}` : "addproduct";
+      let res = await fetch(`http://localhost:5000/${route}`, {
+        method: id ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -42,7 +65,7 @@ const Add = () => {
   return (
     <div className="addcontainer">
       <div className="register-form">
-        <h1>Add Product</h1>
+        <h1>{id ? "Edit" : "Add"} Product</h1>
         <label htmlFor="imgFile">
           <img src={image ? image : ProductAvatar} alt="" />
           <input
@@ -71,7 +94,7 @@ const Add = () => {
           value={stock}
           onChange={(e) => setStock(e.target.value)}
         />
-        <button onClick={Add}>Add</button>
+        <button onClick={Add}>{id ? "Update" : "Add"}</button>
       </div>
     </div>
   );

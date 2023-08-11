@@ -20,6 +20,7 @@ function App() {
           <Route path="/" element={<PrivateRoute />}>
             <Route index element={<Home />} />
             <Route path="/addproduct" element={<Add />} />
+            <Route path="/editproduct/:id" element={<Add />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

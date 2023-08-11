@@ -27,3 +27,12 @@
 .links button {
     padding: 6px 12px;
 }
+
+.logoutBtn {
+    cursor: pointer;
+}
+
+.logoutBtn:hover {
+    background-color: crimson;
+    color: white;
+}

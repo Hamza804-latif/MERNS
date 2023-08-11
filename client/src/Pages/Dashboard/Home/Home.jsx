@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "./home.css";
 import { toast } from "react-toastify";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     GetAllProducts();
@@ -68,6 +70,10 @@ const Home = () => {
     }
   }
 
+  function Edit(id) {
+    navigate(`/editproduct/${id}`);
+  }
+
   return (
     <div className="table">
       <div className="searchmain">
@@ -102,7 +108,7 @@ const Home = () => {
                       <td>{item.price}</td>
                       <td>{item.stock}</td>
                       <td className="tableBtns">
-                        <button>Edit</button>
+                        <button onClick={() => Edit(item?._id)}>Edit</button>
                         <button onClick={() => Delete(item?._id)}>
                           Delete
                         </button>
