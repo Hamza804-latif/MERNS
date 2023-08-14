@@ -13,13 +13,24 @@ const Home = () => {
   }, []);
 
   async function GetAllProducts() {
+    let token = JSON.parse(localStorage.getItem("userToken"));
     try {
       setIsLoading(true);
-      let res = await fetch("http://localhost:5000/allproducts");
+      let res = await fetch("http://localhost:5000/allproducts", {
+        headers: {
+          auth: `bearer ${token}`,
+        },
+      });
       let jsonData = await res.json();
       setIsLoading(false);
       if (jsonData.status === 200) {
         setProducts(jsonData?.data);
+      } else {
+        toast.error(jsonData?.msg);
+        if (jsonData?.login === false) {
+          localStorage.removeItem("userToken");
+          navigate("/login");
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -29,10 +40,15 @@ const Home = () => {
   }
 
   async function Delete(id) {
+    let token = JSON.parse(localStorage.getItem("userToken"));
+
     try {
       setIsLoading(true);
       let res = await fetch(`http://localhost:5000/delete/${id}`, {
         method: "DELETE",
+        headers: {
+          auth: `bearer ${token}`,
+        },
       });
       let json = await res.json();
       setIsLoading(false);
@@ -42,6 +58,10 @@ const Home = () => {
         GetAllProducts();
       } else {
         toast.error(json?.msg);
+        if (json?.login === false) {
+          localStorage.removeItem("userToken");
+          navigate("/login");
+        }
       }
     } catch (error) {
       setIsLoading(false);
@@ -51,17 +71,29 @@ const Home = () => {
   }
 
   async function Search(e) {
+    let token = JSON.parse(localStorage.getItem("userToken"));
+
     try {
       setIsLoading(true);
 
       let res = await fetch(
-        `http://localhost:5000/search/?query=${e.target.value}`
+        `http://localhost:5000/search/?query=${e.target.value}`,
+        {
+          headers: {
+            auth: `bearer ${token}`,
+          },
+        }
       );
       let json = await res.json();
       setIsLoading(false);
-
       if (json.status === 200) {
         setProducts(json.data);
+      } else {
+        toast.error(json?.msg);
+        if (json?.login === false) {
+          localStorage.removeItem("userToken");
+          navigate("/login");
+        }
       }
     } catch (error) {
       setIsLoading(false);

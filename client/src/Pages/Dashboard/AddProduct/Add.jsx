@@ -29,14 +29,25 @@ const Add = () => {
   }, []);
 
   async function getAll() {
+    let token = JSON.parse(localStorage.getItem("userToken"));
     try {
-      let data = await fetch(`http://localhost:5000/product/${id}`);
+      let data = await fetch(`http://localhost:5000/product/${id}`, {
+        headers: {
+          auth: `bearer ${token}`,
+        },
+      });
       let json = await data.json();
       if (json.status === 200) {
         setImage(json.data.image);
         setName(json.data.name);
         setPrice(json.data.price);
         setStock(json.data.stock);
+      } else {
+        toast.error(json?.msg);
+        if (json?.login === false) {
+          localStorage.removeItem("userToken");
+          navigate("/login");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -45,11 +56,14 @@ const Add = () => {
 
   async function Add() {
     if (image && price && name && stock) {
+      let token = JSON.parse(localStorage.getItem("userToken"));
+
       let route = id ? `editproduct/${id}` : "addproduct";
       let res = await fetch(`http://localhost:5000/${route}`, {
         method: id ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
+          auth: `bearer ${token}`,
         },
         body: JSON.stringify({ image, price, name, stock }),
       });
@@ -57,6 +71,12 @@ const Add = () => {
       if (jsonData.status === 200) {
         toast.success(jsonData.msg);
         navigate("/");
+      } else {
+        toast.error(jsonData?.msg);
+        if (jsonData?.login === false) {
+          localStorage.removeItem("userToken");
+          navigate("/login");
+        }
       }
     } else {
       toast.error("please fill all fields");
